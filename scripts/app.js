@@ -19,8 +19,8 @@ app.registerExtension({
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
         const VALID_NODES = {
             'PromptHelper_FormatString': ['str_', ['pattern']],
-            'PromptHelper_JoinString': ['str_', ['separator']],
-            'PromptHelper_ConditioningCombine': ['cond_', []],
+            'PromptHelper_ConcatString': ['str_', ['separator']],
+            'PromptHelper_CombineConditioning': ['cond_', []],
         }
         if (!Object.keys(VALID_NODES).includes(nodeData.name)) return;
         const input_name = VALID_NODES[nodeData.name][0];
@@ -114,7 +114,7 @@ app.registerExtension({
     },
 
     nodeCreated(node) {
-        const VALID_NODE_TYPES = ['PromptHelper_FormatString', 'PromptHelper_JoinString', 'PromptHelper_ConditioningCombine'];
+        const VALID_NODE_TYPES = ['PromptHelper_FormatString', 'PromptHelper_ConcatString', 'PromptHelper_CombineConditioning'];
         if (!VALID_NODE_TYPES.includes(node.comfyClass)) return;
 
         if (node.widgets) {

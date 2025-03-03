@@ -25,7 +25,7 @@ class PromptHelper_FormatString(BaseNode):
         return (pattern,)
 
 
-class PromptHelper_JoinString(BaseNode):
+class PromptHelper_ConcatString(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -45,7 +45,7 @@ class PromptHelper_JoinString(BaseNode):
         return (result,)
 
 
-class PromptHelper_StringToConditioningCombine(BaseNode):
+class PromptHelper_EncodeMultiStringCombine(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -69,6 +69,8 @@ class PromptHelper_StringToConditioningCombine(BaseNode):
         parts = [trim_prompt_string(part) for part in parts]
         while "" in parts:
             parts.remove("")
+        if len(parts) == 0:
+            return (None,)
         # encode parts
         parts_tokens = [clip.tokenize(part) for part in parts]
         parts_encoded = [clip.encode_from_tokens_scheduled(tokens) for tokens in parts_tokens]
@@ -80,7 +82,7 @@ class PromptHelper_StringToConditioningCombine(BaseNode):
         return (base_conditioning,)
 
 
-class PromptHelper_ConditioningConcat(BaseNode):
+class PromptHelper_ConcatConditioning(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -97,6 +99,8 @@ class PromptHelper_ConditioningConcat(BaseNode):
         _to = kwargs["to"]
         _from = kwargs["from"]
 
+        if _from is None or len(_from) == 0:
+            return (_to,)
         if len(_from) > 1:
             raise RuntimeError("Warning: ConditioningConcat conditioning_from contains more than 1 cond, only the first one will actually be applied to conditioning_to.")
         cond_from = _from[0][0]
@@ -111,7 +115,7 @@ class PromptHelper_ConditioningConcat(BaseNode):
         return (out,)
 
 
-class PromptHelper_ConditioningCombine(BaseNode):
+class PromptHelper_CombineConditioning(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {

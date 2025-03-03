@@ -4,7 +4,7 @@ from .base import BaseNode
 from .helper import trim_prompt_string
 
 
-class PromptHelper_WeightedPrompts(BaseNode):
+class PromptHelper_WeightedPrompt(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {
