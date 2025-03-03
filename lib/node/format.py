@@ -30,7 +30,7 @@ class PromptHelper_JoinString(BaseNode):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "sep": ("STRING", {"default": ","}),
+                "separator": ("STRING", {"default": ","}),
             },
             "optional": {
                 "str_1": ("STRING", {"forceInput": True}),
@@ -40,8 +40,8 @@ class PromptHelper_JoinString(BaseNode):
     RETURN_TYPES = ("STRING",)
     FUNCTION = "join"
 
-    def join(self, sep: str, **kwargs):
-        result = f"{sep.strip()} ".join([trim_prompt_string(x) for x in kwargs.values() if x])
+    def join(self, separator: str, **kwargs):
+        result = f"{separator.strip()} ".join([trim_prompt_string(x) for x in kwargs.values() if x])
         return (result,)
 
 
