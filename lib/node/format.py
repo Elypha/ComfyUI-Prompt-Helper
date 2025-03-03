@@ -9,7 +9,7 @@ class PromptHelper_FormatString(BaseNode):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "pattern": ("STRING", {"default": "[1], [2]", "display": "pattern"}),
+                "pattern": ("STRING", {"default": "[1], [2]"}),
             },
             "optional": {
                 "str_1": ("STRING", {"forceInput": True}),
@@ -30,7 +30,7 @@ class PromptHelper_JoinString(BaseNode):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "separator": ("STRING", {"default": ",", "display": "sep"}),
+                "sep": ("STRING", {"default": ","}),
             },
             "optional": {
                 "str_1": ("STRING", {"forceInput": True}),
@@ -40,8 +40,8 @@ class PromptHelper_JoinString(BaseNode):
     RETURN_TYPES = ("STRING",)
     FUNCTION = "join"
 
-    def join(self, separator: str, **kwargs):
-        result = f"{separator.strip()} ".join([trim_prompt_string(x) for x in kwargs.values() if x])
+    def join(self, sep: str, **kwargs):
+        result = f"{sep.strip()} ".join([trim_prompt_string(x) for x in kwargs.values() if x])
         return (result,)
 
 
