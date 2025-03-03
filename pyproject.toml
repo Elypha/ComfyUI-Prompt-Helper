@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-prompt-helper"
+description = "Concat conditions and prompts for ComfyUI"
+version = "1.0.0"
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/elypha/ComfyUI-Prompt-Helper"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "Elypha"
+DisplayName = "ComfyUI-Prompt-Helper"
+Icon = ""
