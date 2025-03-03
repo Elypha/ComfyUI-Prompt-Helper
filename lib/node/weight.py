@@ -8,11 +8,9 @@ class PromptHelper_WeightedPrompt(BaseNode):
     @classmethod
     def INPUT_TYPES(s):
         return {
-            "required": {
+            "optional": {
                 "prompt_1": ("STRING", {"default": "", "multiline": True}),
                 "weight_1": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
-            },
-            "optional": {
                 "prompt_2": ("STRING", {"default": "", "multiline": True}),
                 "weight_2": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
                 "prompt_3": ("STRING", {"default": "", "multiline": True}),
@@ -21,12 +19,12 @@ class PromptHelper_WeightedPrompt(BaseNode):
                 "weight_4": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
                 "prompt_5": ("STRING", {"default": "", "multiline": True}),
                 "weight_5": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
-                "weight": ("STRING", {"default": "", "multiline": False}),
+                "overall_weight": ("FLOAT", {"default": 1.0, "multiline": False}),
             },
         }
 
     RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
+    RETURN_NAMES = ("STRING",)
 
     FUNCTION = "get_weighted_prompts"
 
@@ -37,7 +35,7 @@ class PromptHelper_WeightedPrompt(BaseNode):
     """
 
     def get_weighted_prompts(self, **kwargs):
-        overall_weight = float(kwargs.get("weight", 1.0))
+        overall_weight = float(kwargs.get("overall_weight", 1.0))
 
         prompts = []
         for i in [1, 2, 3, 4, 5]:
