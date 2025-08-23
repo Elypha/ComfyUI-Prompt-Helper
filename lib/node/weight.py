@@ -10,12 +10,12 @@ class PromptHelper_WeightedPrompt(BaseNode):
         return {
             "optional": {
                 "prompt_1": ("STRING", {"default": "", "multiline": True}),
-                "weight_1": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
+                "weight_1": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.1}),
                 "prompt_2": ("STRING", {"default": "", "multiline": True}),
-                "weight_2": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
+                "weight_2": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.1}),
                 "prompt_3": ("STRING", {"default": "", "multiline": True}),
-                "weight_3": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
-                "multiplier": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
+                "weight_3": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.1}),
+                "multiplier": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.1}),
             },
         }
 

@@ -4,6 +4,7 @@ import numpy as np
 
 from .base import BaseNode
 from ..preset import PresetManager, PresetManagerAdvanced
+from .helper import trim_prompt_string
 
 import folder_paths
 
@@ -13,6 +14,7 @@ class PromptHelper_LoadPreset(BaseNode):
     def INPUT_TYPES(s):
         return {
             "required": {
+                "string": ("STRING", {"default": "", "multiline": True}),
                 "preset": (list(PresetManager.get_presets().keys()),),
             }
         }
@@ -20,8 +22,10 @@ class PromptHelper_LoadPreset(BaseNode):
     RETURN_TYPES = ("STRING",)
     FUNCTION = "load_preset"
 
-    def load_preset(self, preset):
-        prompt = PresetManager.get_preset(preset)
+    def load_preset(self, string, preset):
+        prompt_1 = trim_prompt_string(string)
+        prompt_2 = trim_prompt_string(PresetManager.get_preset(preset))
+        prompt = trim_prompt_string(f"{prompt_1}, {prompt_2}")
         return (prompt,)
 
 
