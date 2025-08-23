@@ -1,6 +1,6 @@
 __pycache__
 
-presets/
+presets/*
 !presets/sample/
 
 *.ini
