@@ -10,16 +10,12 @@ class PromptHelper_WeightedPrompt(BaseNode):
         return {
             "optional": {
                 "prompt_1": ("STRING", {"default": "", "multiline": True}),
-                "weight_1": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
+                "weight_1": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
                 "prompt_2": ("STRING", {"default": "", "multiline": True}),
-                "weight_2": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
+                "weight_2": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
                 "prompt_3": ("STRING", {"default": "", "multiline": True}),
-                "weight_3": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
-                "prompt_4": ("STRING", {"default": "", "multiline": True}),
-                "weight_4": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
-                "prompt_5": ("STRING", {"default": "", "multiline": True}),
-                "weight_5": ("FLOAT", {"default": 1.0, "min": -100, "max": 100, "step": 0.1}),
-                "overall_weight": ("FLOAT", {"default": 1.0, "multiline": False}),
+                "weight_3": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
+                "multiplier": ("FLOAT", {"default": 1.0, "min": 0, "max": 2, "step": 0.05}),
             },
         }
 
@@ -35,15 +31,16 @@ class PromptHelper_WeightedPrompt(BaseNode):
     """
 
     def get_weighted_prompts(self, **kwargs):
-        overall_weight = float(kwargs.get("overall_weight", 1.0))
+        multiplier = float(kwargs.get("multiplier", 1.0))
 
         prompts = []
-        for i in [1, 2, 3, 4, 5]:
+        for i in [1, 2, 3]:
             prompt = trim_prompt_string(kwargs[f"prompt_{i}"])
             weight = kwargs[f"weight_{i}"]
             if prompt == "" or weight == 0.0:
                 continue
-            if (final_weight := weight * overall_weight) == 1.0:
+            final_weight = weight * multiplier
+            if final_weight == 1.0:
                 prompts.append(prompt)
             else:
                 prompts.append(f"({prompt}:{final_weight:.3f})")
