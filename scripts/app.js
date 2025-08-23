@@ -1,32 +1,46 @@
+// ref: https://github.com/ltdrdata/ComfyUI-Impact-Pack/blob/Main/js/impact-pack.js
+// ref: https://github.com/nkchocoai/ComfyUI-PromptUtilities/blob/master/js/app.js
+
 import { app } from "/scripts/app.js";
 import { api } from "/scripts/api.js";
 
-// refer. https://github.com/ltdrdata/ComfyUI-Impact-Pack/blob/Main/js/impact-pack.js
+const VALID_NODES = {
+    'PromptHelper_FormatString': ['str_', ['pattern']],
+    'PromptHelper_ConcatString': ['str_', ['separator']],
+    'PromptHelper_CombineConditioning': ['cond_', []],
+};
+const VALID_NODE_TYPES = Object.keys(VALID_NODES);
+
 app.registerExtension({
     name: "Comfy.PromptHelper.app",
     setup() {
         const refreshButton = document.getElementById('comfy-refresh-button');
-        refreshButton.addEventListener('click', async function () {
-            await fetch('/prompt_helper/refresh', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
-            }).then(response => { }).catch(error => {
-                console.error('Error:', error);
+        if (refreshButton) {
+            refreshButton.addEventListener('click', async function () {
+                await fetch('/prompt_helper/refresh', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                }).then(response => { }).catch(error => {
+                    console.error('Error:', error);
+                });
             });
-        });
+        }
     },
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        const VALID_NODES = {
-            'PromptHelper_FormatString': ['str_', ['pattern']],
-            'PromptHelper_ConcatString': ['str_', ['separator']],
-            'PromptHelper_CombineConditioning': ['cond_', []],
-        }
-        if (!Object.keys(VALID_NODES).includes(nodeData.name)) return;
+        if (!VALID_NODE_TYPES.includes(nodeData.name)) return;
+
         const input_name = VALID_NODES[nodeData.name][0];
         const ignore_fields = VALID_NODES[nodeData.name][1];
 
         nodeType.prototype.onConnectionsChange = function (type, index, connected, link_info) {
+            if (!link_info && !connected) {
+                // Handle disconnection without link_info
+                if (type === LiteGraph.INPUT && !this.inputs[index].link) {
+                    // Logic for removing an input slot on disconnection
+                }
+            }
+
             if (!link_info) return;
 
             if (type == LiteGraph.OUTPUT) {
@@ -106,7 +120,7 @@ app.registerExtension({
 
             let last_slot = this.inputs[this.inputs.length - 1];
             if (
-                (ignore_fields.includes(last_slot.name) && this.inputs[this.inputs.length - 2].link != undefined)
+                (ignore_fields.includes(last_slot.name) && this.inputs.length > 1 && this.inputs[this.inputs.length - 2].link != undefined)
                 || (!ignore_fields.includes(last_slot.name) && last_slot.link != undefined)) {
                 this.addInput(`${input_name}${slot_i}`, this.outputs[0].type);
             }
@@ -114,16 +128,24 @@ app.registerExtension({
     },
 
     nodeCreated(node) {
-        const VALID_NODE_TYPES = ['PromptHelper_FormatString', 'PromptHelper_ConcatString', 'PromptHelper_CombineConditioning'];
         if (!VALID_NODE_TYPES.includes(node.comfyClass)) return;
 
         if (node.widgets) {
-            node.widgets = node.widgets.filter(w => !node.inputs.some((input) => w.name === input.name));
+            const ignore_fields = VALID_NODES[node.comfyClass][1];
+            // Only remove widgets that have a matching input AND are NOT in the ignore list.
+            node.widgets = node.widgets.filter(w => {
+                // If a field is supposed to be ignored ('separator', etc), then skip it.
+                if (ignore_fields.includes(w.name)) {
+                    return true;
+                }
+                // Otherwise, remove it if a corresponding input slot exists.
+                return !node.inputs.some((input) => w.name === input.name);
+            });
         }
     }
 });
 
-// refer. https://github.com/ltdrdata/ComfyUI-Impact-Pack/blob/Main/js/common.js
+// ref https://github.com/ltdrdata/ComfyUI-Impact-Pack/blob/Main/js/common.js
 function nodeFeedbackHandler(event) {
     let nodes = app.graph._nodes_by_id;
     let node = nodes[event.detail.node_id];
