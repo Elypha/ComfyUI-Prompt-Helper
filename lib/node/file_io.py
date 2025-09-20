@@ -86,7 +86,6 @@ class PromptHelper_LoadImageBatchFromDir:
 
     RETURN_TYPES = ("IMAGE", "MASK", "INT", "STRING")
     RETURN_NAMES = ("IMAGE", "MASK", "COUNT", "FILENAMES")
-    OUTPUT_IS_LIST = (False, False, False, True)
     FUNCTION = "load_images"
     CATEGORY = "image"
     DESCRIPTION = "Loads all images from a directory as a single batch. All images must have the same dimensions."
