@@ -58,7 +58,7 @@ def load_image_to_tensor(image_path: Path) -> tuple[Image.Image, torch.Tensor]:
 
 
 def get_mask_from_image(image: Image.Image) -> torch.Tensor:
-    # from comfyui `class LoadImage` at nodes.py
+    # from comfyui `class LoadImage` at nodes.py, modified to set default mask size to match image size
     if "A" in image.getbands():
         mask = np.array(image.getchannel("A")).astype(np.float32) / 255.0
         mask = 1.0 - torch.from_numpy(mask)
@@ -66,7 +66,7 @@ def get_mask_from_image(image: Image.Image) -> torch.Tensor:
         mask = np.array(image.convert("RGBA").getchannel("A")).astype(np.float32) / 255.0
         mask = 1.0 - torch.from_numpy(mask)
     else:
-        mask = torch.zeros((64, 64), dtype=torch.float32, device="cpu")
+        mask = torch.zeros(image.size[::-1], dtype=torch.float32, device="cpu")
     return mask
 
 
