@@ -81,6 +81,7 @@ class PromptHelper_LoadImageBatchFromDir:
                 "skips": ("INT", {"default": 0, "min": 0, "max": sys.maxsize, "step": 1}),
                 "sort_by": (SORT_METHODS,),
                 "trim_suffix": ("BOOLEAN", {"default": False, "tooltip": "If enabled, FILENAMES output will have the file suffix removed."}),
+                "recursive": ("BOOLEAN", {"default": False, "tooltip": "If enabled, the directory will be searched recursively."}),
             },
         }
 
@@ -90,14 +91,15 @@ class PromptHelper_LoadImageBatchFromDir:
     CATEGORY = "image"
     DESCRIPTION = "Loads all images from a directory as a single batch. All images must have the same dimensions."
 
-    def load_images(self, directory: str, skips: int = 0, sort_by=None, trim_suffix=False):
+    def load_images(self, directory: str, skips: int = 0, sort_by=None, trim_suffix=False, recursive=False):
         input_dir = Path(directory)
         if not input_dir.exists():
             raise FileNotFoundError(f"Input directory '{directory}' does not exist.")
         if not input_dir.is_dir():
             raise NotADirectoryError(f"Input path '{directory}' is not a directory.")
 
-        image_files = [file for file in input_dir.rglob("*") if file.suffix.lower() in VALID_IMAGE_EXTENSIONS]
+        generator = input_dir.rglob("*") if recursive else input_dir.glob("*")
+        image_files = [file for file in generator if file.suffix.lower() in VALID_IMAGE_EXTENSIONS]
         image_files = sort_files(image_files, sort_by)
         if skips > 0:
             image_files = image_files[skips:]
@@ -141,6 +143,7 @@ class PromptHelper_LoadImageListFromDir:
                 "skips": ("INT", {"default": 0, "min": 0, "max": sys.maxsize, "step": 1}),
                 "sort_by": (SORT_METHODS,),
                 "trim_suffix": ("BOOLEAN", {"default": False, "tooltip": "If enabled, FILENAMES output will have the file suffix removed."}),
+                "recursive": ("BOOLEAN", {"default": False, "tooltip": "If enabled, the directory will be searched recursively."}),
             },
         }
 
@@ -151,14 +154,15 @@ class PromptHelper_LoadImageListFromDir:
     CATEGORY = "image"
     DESCRIPTION = "Loads all images from a directory as a list of individual images."
 
-    def load_images(self, directory: str, skips: int = 0, sort_by=None, trim_suffix=False):
+    def load_images(self, directory: str, skips: int = 0, sort_by=None, trim_suffix=False, recursive=False):
         input_dir = Path(directory)
         if not input_dir.exists():
             raise FileNotFoundError(f"Input directory '{directory}' does not exist.")
         if not input_dir.is_dir():
             raise NotADirectoryError(f"Input path '{directory}' is not a directory.")
 
-        image_files = [file for file in input_dir.rglob("*") if file.suffix.lower() in VALID_IMAGE_EXTENSIONS]
+        generator = input_dir.rglob("*") if recursive else input_dir.glob("*")
+        image_files = [file for file in generator if file.suffix.lower() in VALID_IMAGE_EXTENSIONS]
         image_files = sort_files(image_files, sort_by)
         if skips > 0:
             image_files = image_files[skips:]
