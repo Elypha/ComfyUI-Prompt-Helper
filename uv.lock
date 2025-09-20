@@ -1,0 +1,12 @@
+version = 1
+revision = 3
+requires-python = ">=3.13"
+resolution-markers = [
+    "sys_platform == 'linux' or sys_platform == 'win32'",
+    "sys_platform != 'linux' and sys_platform != 'win32'",
+]
+
+[[package]]
+name = "comfyui-prompt-helper"
+version = "1.3.0"
+source = { virtual = "." }

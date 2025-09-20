@@ -3,6 +3,7 @@ from .lib.node.format import *
 from .lib.node.preset import *
 from .lib.node.weight import *
 from .lib.custom_server import *
+from .lib.node.file_io import *
 from .lib.preset import PresetManager
 
 NODE_CLASS_MAPPINGS = {
@@ -16,6 +17,9 @@ NODE_CLASS_MAPPINGS = {
     "PromptHelper_ConcatConditioning": PromptHelper_ConcatConditioning,
     "PromptHelper_CombineConditioning": PromptHelper_CombineConditioning,
     "PromptHelper_FormatString": PromptHelper_FormatString,
+    "PromptHelper_LoadImageBatchFromDir": PromptHelper_LoadImageBatchFromDir,
+    "PromptHelper_LoadImageListFromDir": PromptHelper_LoadImageListFromDir,
+    "PromptHelper_SaveImageToDir": PromptHelper_SaveImageToDir,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -29,6 +33,9 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "PromptHelper_ConcatConditioning": "Concat (cond)",
     "PromptHelper_CombineConditioning": "Combine (cond)",
     "PromptHelper_FormatString": "Format (str)",
+    "PromptHelper_LoadImageBatchFromDir": "Load Image Batch (dir)",
+    "PromptHelper_LoadImageListFromDir": "Load Image List (dir)",
+    "PromptHelper_SaveImageToDir": "Save Image (dir)",
 }
 
 WEB_DIRECTORY = "./scripts"
